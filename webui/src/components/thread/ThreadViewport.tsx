@@ -908,14 +908,14 @@ export const ThreadViewport = forwardRef<ThreadViewportHandle, ThreadViewportPro
     const atHistoryBoundary = () => el.scrollTop <= 1 && messages.length > 0 && conversationReady
       && !pendingConversationScrollRef.current;
     const canLoadAtTop = () => atHistoryBoundary() && !loadingOlder && !navigation?.loading
-      && (hiddenMessageCount > 0 || (hasMoreBefore && !olderError));
+      && (hiddenMessageCount > 0 || hasMoreBefore);
     const handleDirectionalInput = (
       direction: ThreadScrollDirection | null,
     ) => {
       if (!direction) return;
       if (direction === "forward" && historyWindow?.hasMoreAfter
         && el.scrollHeight - el.scrollTop - el.clientHeight < HISTORY_PREFETCH_MIN_PX
-        && !navigation?.loading && !navigation?.error) {
+        && !navigation?.loading) {
         captureHistoryScrollAnchor();
         navigation?.newer();
       }
@@ -954,7 +954,7 @@ export const ThreadViewport = forwardRef<ThreadViewportHandle, ThreadViewportPro
           yieldCameraToUser();
           setAtHistoryTop(true);
           const first = historySpringRef.current?.wheel(-event.deltaY * unit);
-          if (first && canLoadAtTop()) loadEarlierMessages();
+          if ((first || olderError) && canLoadAtTop()) loadEarlierMessages();
           return;
         }
       }
@@ -1088,7 +1088,6 @@ export const ThreadViewport = forwardRef<ThreadViewportHandle, ThreadViewportPro
       loading={loadingOlder}
       error={olderError}
       exhausted={historyExhausted}
-      requiresBoundary={historyWindow?.olderAtBoundaryOnly}
       onRetry={loadEarlierMessages}
       className={historySlotKey ? "thread-history-inline"
         : cn("thread-history-reveal", historyPhase === "feedback" && "thread-history-feedback")}
