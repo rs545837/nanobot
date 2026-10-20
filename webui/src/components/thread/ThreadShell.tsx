@@ -939,6 +939,9 @@ export function ThreadShell({
     chatId, initial, hasPendingToolCalls, handleTurnEnd, handleStreamDetach, completedTurnIds,
   );
   const displayMessages = useMemo(() => projectWebuiThreadMessages(messages), [messages]);
+  const promptNavigation = usePromptHistory(historyKey, historyVersion, displayMessages);
+  const updateNavigationMessages = promptNavigation.updateMessages;
+
   const visibleHistorical = useMemo(() => projectWebuiThreadMessages(historical), [historical]);
   const olderPageProjectionPending = Boolean(
     olderPageStartRef.current?.historyKey === historyKey
@@ -968,8 +971,6 @@ export function ThreadShell({
       olderPageStartRef.current = null;
     }
   }, [client, displayMessages, historyKey, loadingOlder, olderError, olderPageProjectionPending, visibleHistorical]);
-  const promptNavigation = usePromptHistory(historyKey, historyVersion, displayMessages);
-  const updateNavigationMessages = promptNavigation.updateMessages;
 
   const loadTraceDetails = useCallback(async (refs: string[]) => {
     const requestKey = historyKey;
