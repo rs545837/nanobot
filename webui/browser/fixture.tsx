@@ -148,7 +148,7 @@ createRoot(document.getElementById("root")!).render(<TooltipProvider>
   {parameters.get("case") === "typography"
     ? <ClientProvider client={railClient} token="fixture"><TypographyFixture /></ClientProvider>
     : parameters.get("case") === "history-boundary"
-    ? <ClientProvider client={railClient} token="fixture" webuiCapabilities={["webui.prompt-navigation.v1"]}><HistoryBoundaryFixture local={parameters.has("local")} navigate={parameters.has("navigate")} /></ClientProvider>
+    ? <ClientProvider client={railClient} token="fixture" webuiCapabilities={["webui.prompt-navigation.v1"]}><HistoryBoundaryFixture local={parameters.has("local")} navigate={parameters.has("navigate")} tasks={parameters.has("tasks")} /></ClientProvider>
     : parameters.get("case") === "diagrams"
     ? <DiagramFixture parameters={parameters} />
     : parameters.get("case") === "new-chat-skeleton"
